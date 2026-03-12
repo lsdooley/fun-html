@@ -1,11 +1,1064 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fun HTML</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matthew Dooley — College Outreach Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0b0d12;
+  --surface: #13161e;
+  --surface2: #1c2030;
+  --border: rgba(255,255,255,.06);
+  --border2: rgba(255,255,255,.10);
+  --text: #eef0f6;
+  --muted: rgba(238,240,246,.5);
+  --muted2: rgba(238,240,246,.28);
+  --gold: #f5b56e;
+  --gold-dim: rgba(245,181,110,.12);
+  --gold-border: rgba(245,181,110,.25);
+  --red: #f27573;
+  --red-dim: rgba(242,117,115,.10);
+  --red-border: rgba(242,117,115,.28);
+  --green: #5dd8a0;
+  --green-dim: rgba(93,216,160,.10);
+  --green-border: rgba(93,216,160,.28);
+  --blue: #5badee;
+  --blue-dim: rgba(91,173,238,.10);
+  --blue-border: rgba(91,173,238,.28);
+  --purple: #a78ef0;
+  --purple-dim: rgba(167,142,240,.10);
+  --purple-border: rgba(167,142,240,.28);
+  --teal: #4ecdc4;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── AMBIENT BACKGROUND ── */
+.ambient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(120px); opacity: .12;
+  animation: drift 20s ease-in-out infinite;
+}
+.orb-1 { width: 700px; height: 700px; background: #5b3fcf; top: -200px; left: -200px; animation-duration: 25s; }
+.orb-2 { width: 600px; height: 600px; background: #c45a1e; top: 30%; right: -200px; animation-duration: 30s; animation-delay: -8s; animation-direction: reverse; }
+.orb-3 { width: 500px; height: 500px; background: #1e6bc4; bottom: -150px; left: 30%; animation-duration: 22s; animation-delay: -4s; }
+@keyframes drift { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-20px) scale(1.05); } 66% { transform: translate(-20px,30px) scale(.95); } }
+
+/* ── LAYOUT ── */
+.wrap { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(11,13,18,.85); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold) 0%, #e8855a 100%);
+  display: grid; place-items: center; font-size: 14px; font-weight: 800; color: #0b0d12;
+}
+.nav-title { font-size: .85rem; font-weight: 600; letter-spacing: .01em; }
+.nav-sub { font-size: .72rem; color: var(--muted); }
+.nav-links { display: flex; gap: 6px; }
+.nav-link {
+  padding: 6px 14px; border-radius: 8px; font-size: .78rem; font-weight: 500;
+  color: var(--muted); text-decoration: none; transition: all .2s;
+  border: 1px solid transparent;
+}
+.nav-link:hover { background: var(--surface); color: var(--text); border-color: var(--border); }
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 0 64px;
+  text-align: center;
+  animation: fadeUp .8s ease both;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold-dim); border: 1px solid var(--gold-border);
+  color: var(--gold); border-radius: 100px;
+  font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  padding: 6px 16px; margin-bottom: 28px;
+}
+.hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+.hero-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.8rem, 7vw, 5.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -.03em;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,.5));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-name em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold), #e8855a);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.hero-sub {
+  font-size: 1.05rem; color: var(--muted); margin-bottom: 12px; font-weight: 400;
+}
+.hero-meta { font-size: .78rem; color: var(--muted2); margin-bottom: 48px; }
+
+/* ── STAT PILLS ── */
+.stat-row {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+  animation: fadeUp .8s .15s ease both;
+}
+.stat-pill {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 16px 28px; min-width: 120px;
+  transition: transform .2s, border-color .2s;
+}
+.stat-pill:hover { transform: translateY(-3px); border-color: var(--border2); }
+.stat-pill .num {
+  font-size: 2rem; font-weight: 800; line-height: 1;
+  background: linear-gradient(135deg, #fff, rgba(255,255,255,.6));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-pill.gold .num { background: linear-gradient(135deg, var(--gold), #e8855a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-pill.red .num { background: linear-gradient(135deg, var(--red), #e85a5a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-pill.green .num { background: linear-gradient(135deg, var(--green), #3dcfa0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-pill .label { font-size: .68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-top: 4px; }
+
+/* ── SECTION HEADER ── */
+.section-label {
+  font-size: .68rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted2); margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+.section-sub { font-size: .85rem; color: var(--muted); margin-bottom: 32px; }
+
+/* ── URGENT ALERT BANNER ── */
+.alert-banner {
+  background: linear-gradient(135deg, rgba(242,117,115,.12), rgba(245,181,110,.08));
+  border: 1px solid rgba(242,117,115,.3);
+  border-radius: 16px; padding: 20px 24px;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 32px;
+  animation: fadeUp .8s .2s ease both;
+}
+.alert-icon { font-size: 1.8rem; flex-shrink: 0; }
+.alert-text strong { display: block; font-size: .9rem; font-weight: 700; color: var(--red); margin-bottom: 2px; }
+.alert-text span { font-size: .8rem; color: var(--muted); }
+
+/* ── ACTION CARDS ── */
+.action-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px; margin-bottom: 64px;
+  animation: fadeUp .8s .25s ease both;
+}
+.action-card {
+  background: var(--surface);
+  border-radius: 16px; padding: 22px;
+  position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+  border: 1px solid var(--border);
+}
+.action-card:hover { transform: translateY(-3px); box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+.action-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: 16px 16px 0 0;
+}
+.action-card.urgent::before { background: linear-gradient(90deg, var(--red), #e87373); }
+.action-card.warn::before  { background: linear-gradient(90deg, var(--gold), #e8a055); }
+.action-card.info::before  { background: linear-gradient(90deg, var(--blue), #4a9ed6); }
+.action-card.passed::before { background: linear-gradient(90deg, var(--muted2), rgba(238,240,246,.1)); }
+
+.action-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.action-school { font-size: .98rem; font-weight: 700; line-height: 1.3; }
+.action-badge {
+  padding: 3px 10px; border-radius: 100px;
+  font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  white-space: nowrap; flex-shrink: 0;
+}
+.badge-urgent  { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+.badge-action  { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+.badge-info    { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue-border); }
+.badge-passed  { background: rgba(255,255,255,.05); color: var(--muted); border: 1px solid var(--border2); }
+.badge-green   { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+
+.action-desc { font-size: .8rem; color: var(--muted); line-height: 1.55; margin-bottom: 14px; }
+.action-footer { display: flex; align-items: center; justify-content: space-between; }
+.action-deadline {
+  font-size: .72rem; font-weight: 600;
+  display: flex; align-items: center; gap: 5px;
+}
+.action-deadline.urgent { color: var(--red); }
+.action-deadline.warn   { color: var(--gold); }
+.action-deadline.info   { color: var(--blue); }
+.action-deadline.muted  { color: var(--muted2); }
+.action-cta {
+  font-size: .72rem; font-weight: 600;
+  padding: 5px 12px; border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: transparent; color: var(--muted);
+  cursor: pointer; transition: all .2s; text-decoration: none;
+}
+.action-cta:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 64px 0; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin-bottom: 24px;
+}
+.search-box {
+  flex: 1; min-width: 200px; max-width: 320px;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 9px 16px 9px 38px;
+  color: var(--text); font-size: .82rem; outline: none;
+  font-family: inherit; transition: border-color .2s;
+  position: relative;
+}
+.search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 320px; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted2); font-size: .8rem; pointer-events: none; }
+.search-box:focus { border-color: rgba(245,181,110,.4); }
+.search-box::placeholder { color: var(--muted2); }
+
+.filter-pill {
+  padding: 7px 16px; border-radius: 100px; font-size: .75rem; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border2); background: transparent;
+  color: var(--muted); transition: all .2s; font-family: inherit;
+}
+.filter-pill:hover { color: var(--text); background: var(--surface); }
+.filter-pill.active { background: var(--gold-dim); color: var(--gold); border-color: var(--gold-border); }
+
+/* ── SCHOOL GRID ── */
+.school-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px; margin-bottom: 64px;
+}
+.school-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px;
+  transition: transform .2s, border-color .2s;
+  cursor: default;
+}
+.school-card:hover { transform: translateY(-2px); border-color: var(--border2); }
+.school-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.school-name { font-size: .88rem; font-weight: 700; line-height: 1.3; }
+.school-state {
+  font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  padding: 3px 9px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
+  background: var(--surface2); color: var(--muted); border: 1px solid var(--border2);
+}
+.school-type { font-size: .72rem; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
+.school-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag {
+  font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  padding: 2px 8px; border-radius: 4px;
+}
+.tag-scholarship { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+.tag-visit      { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue-border); }
+.tag-deadline   { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+.tag-deadline-passed { background: rgba(255,255,255,.04); color: var(--muted); border: 1px solid var(--border); }
+.tag-financial  { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple-border); }
+.tag-summer     { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+.tag-instate    { background: rgba(93,216,160,.08); color: var(--teal); border: 1px solid rgba(78,205,196,.25); }
+.school-emails { margin-top: 12px; font-size: .68rem; color: var(--muted2); display: flex; align-items: center; gap: 4px; }
+
+/* ── GEO SECTION ── */
+.geo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 64px; }
+.geo-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
+}
+.geo-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.geo-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.geo-title { font-size: .82rem; font-weight: 700; }
+.geo-count { font-size: .72rem; color: var(--muted); }
+.geo-schools { list-style: none; }
+.geo-schools li {
+  font-size: .78rem; color: var(--muted); padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 6px;
+}
+.geo-schools li:last-child { border-bottom: none; }
+.geo-schools li::before { content: '›'; color: var(--muted2); flex-shrink: 0; }
+
+/* ── ORGS SECTION ── */
+.org-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 64px; }
+.org-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px;
+  display: flex; gap: 16px;
+}
+.org-icon {
+  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+  display: grid; place-items: center; font-size: 1.4rem;
+}
+.org-name { font-size: .92rem; font-weight: 700; margin-bottom: 4px; }
+.org-desc { font-size: .78rem; color: var(--muted); line-height: 1.55; }
+
+/* ── NEXT STEPS ── */
+.steps-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 64px; }
+.step-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px;
+  transition: border-color .2s;
+}
+.step-item:hover { border-color: var(--border2); }
+.step-num {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  display: grid; place-items: center; font-size: .72rem; font-weight: 800;
+  margin-top: 1px;
+}
+.step-num.urgent { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
+.step-num.action { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+.step-num.info   { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue-border); }
+.step-num.long   { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple-border); }
+.step-body strong { display: block; font-size: .85rem; font-weight: 700; margin-bottom: 2px; }
+.step-body p { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border); padding: 32px 0; text-align: center;
+  font-size: .72rem; color: var(--muted2); line-height: 1.8;
+}
+footer strong { color: var(--muted); }
+
+/* ── HIDDEN ── */
+.hidden { display: none !important; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .hero { padding: 48px 0 40px; }
+  .action-grid { grid-template-columns: 1fr; }
+  .school-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
+
+<!-- Ambient background -->
+<div class="ambient" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <div class="wrap nav-inner">
+    <div class="nav-brand">
+      <div class="nav-logo">M</div>
+      <div>
+        <div class="nav-title">Matthew Dooley</div>
+        <div class="nav-sub">College Outreach Dashboard</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link" href="#action">Action Items</a>
+      <a class="nav-link" href="#schools">Schools</a>
+      <a class="nav-link" href="#geo">Geography</a>
+      <a class="nav-link" href="#next-steps">Next Steps</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">College Recruitment Report &nbsp;·&nbsp; March 2026</div>
+    <h1 class="hero-name"><em>Matthew</em> Dooley</h1>
+    <p class="hero-sub">Class of 2027 &nbsp;·&nbsp; Brookwood High School, Georgia</p>
+    <p class="hero-meta">Prepared March 8, 2026 &nbsp;·&nbsp; Prepared by Larry Dooley via Claude AI</p>
+
+    <div class="stat-row">
+      <div class="stat-pill gold">
+        <span class="num">29</span>
+        <span class="label">Colleges</span>
+      </div>
+      <div class="stat-pill red">
+        <span class="num">3</span>
+        <span class="label">Urgent Deadlines</span>
+      </div>
+      <div class="stat-pill green">
+        <span class="num">$10K+</span>
+        <span class="label">In Prizes &amp; Grants</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">4</span>
+        <span class="label">Georgia Schools</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">6</span>
+        <span class="label">Jesuit Schools</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTION ITEMS -->
+  <section id="action">
+    <div class="alert-banner">
+      <div class="alert-icon">⚡</div>
+      <div class="alert-text">
+        <strong>3 deadlines require action this week</strong>
+        <span>Bucknell (Mar 14), John Carroll Summer (Mar 16), and KSU Hackathon (Mar 17). Act now to avoid missing out on summer programs and $3,000 in prize money.</span>
+      </div>
+    </div>
+
+    <div class="section-label">Time-sensitive actions</div>
+    <h2 class="section-title">Priority Action Items</h2>
+    <p class="section-sub">Deadlines, visit incentives, and scholarship opportunities that require an immediate response.</p>
+
+    <div class="action-grid">
+
+      <div class="action-card urgent">
+        <div class="action-card-top">
+          <div class="action-school">Bucknell University</div>
+          <span class="action-badge badge-urgent">Deadline Mar 14</span>
+        </div>
+        <p class="action-desc">Bucknell Academy Summer Experience (BASE) application closes March 14, 2026. Creative problem-solving summer program for high schoolers. Bucknell has sent 5 emails — they are actively recruiting Matthew.</p>
+        <div class="action-footer">
+          <span class="action-deadline urgent">⏰ March 14, 2026</span>
+          <a class="action-cta" href="https://www.bucknell.edu" target="_blank" rel="noopener">Apply Now →</a>
+        </div>
+      </div>
+
+      <div class="action-card urgent">
+        <div class="action-card-top">
+          <div class="action-school">John Carroll University</div>
+          <span class="action-badge badge-urgent">2 Deadlines</span>
+        </div>
+        <p class="action-desc">Summer in The Heights 2026 program application due March 16. Spring Preview Day is Saturday, April 18, 2026 — requires an RSVP. Both opportunities to explore this Jesuit university in University Heights, Ohio.</p>
+        <div class="action-footer">
+          <span class="action-deadline urgent">⏰ Summer: Mar 16 / Preview: Apr 18</span>
+          <a class="action-cta" href="https://www.jcu.edu" target="_blank" rel="noopener">Apply Now →</a>
+        </div>
+      </div>
+
+      <div class="action-card urgent">
+        <div class="action-card-top">
+          <div class="action-school">Kennesaw State University — Fintech Hackathon</div>
+          <span class="action-badge badge-urgent">Deadline Mar 17</span>
+        </div>
+        <p class="action-desc">2026 Fintech Hackathon on March 28, 2026. Win up to $3,000 in prizes. Registration closes March 17. As an in-state school in Kennesaw, GA — this is a local opportunity with a real prize payout.</p>
+        <div class="action-footer">
+          <span class="action-deadline urgent">⏰ Register by March 17</span>
+          <a class="action-cta" href="https://www.kennesaw.edu" target="_blank" rel="noopener">Register →</a>
+        </div>
+      </div>
+
+      <div class="action-card warn">
+        <div class="action-card-top">
+          <div class="action-school">Pace University</div>
+          <span class="action-badge badge-action">Schedule Visit</span>
+        </div>
+        <p class="action-desc">Pace University will award a renewable $1,000 grant upon admission and enrollment if Matthew makes an official campus visit (NYC or Westchester campus). No hard deadline listed — but must visit before applying.</p>
+        <div class="action-footer">
+          <span class="action-deadline warn">💰 $1,000 renewable grant at stake</span>
+          <a class="action-cta" href="https://www.pace.edu" target="_blank" rel="noopener">Book Visit →</a>
+        </div>
+      </div>
+
+      <div class="action-card warn">
+        <div class="action-card-top">
+          <div class="action-school">Valdosta State University</div>
+          <span class="action-badge badge-action">Open House Mar 28</span>
+        </div>
+        <p class="action-desc">Open House on March 28, 2026. Also offering dual enrollment for summer 2026 to earn college credits while still in high school. $7.7 million in scholarships and grants awarded last year.</p>
+        <div class="action-footer">
+          <span class="action-deadline warn">📅 Open House: March 28</span>
+          <a class="action-cta" href="https://www.valdosta.edu" target="_blank" rel="noopener">RSVP →</a>
+        </div>
+      </div>
+
+      <div class="action-card info">
+        <div class="action-card-top">
+          <div class="action-school">Northeastern University</div>
+          <span class="action-badge badge-info">Visit This Month</span>
+        </div>
+        <p class="action-desc">Northeastern has invited Matthew to visit the Boston campus in March 2026 while spring visit events are open. Northeastern is a top-tier R1 research university — a campus visit now positions Matthew well for a future application.</p>
+        <div class="action-footer">
+          <span class="action-deadline info">📅 March 2026 visit events</span>
+          <a class="action-cta" href="https://www.northeastern.edu" target="_blank" rel="noopener">Schedule →</a>
+        </div>
+      </div>
+
+      <div class="action-card warn">
+        <div class="action-card-top">
+          <div class="action-school">HSF College 101 Webinar</div>
+          <span class="action-badge badge-action">Confirm Attendance</span>
+        </div>
+        <p class="action-desc">Hispanic Scholarship Fund College 101 webinar was scheduled for March 7, 2026, 10 AM–1 PM ET. 5+ reminder emails were sent. Covers preparing, planning, and paying for college. Confirm whether Matthew attended and check for recordings if not.</p>
+        <div class="action-footer">
+          <span class="action-deadline warn">✅ Confirm or find recording</span>
+          <a class="action-cta" href="https://www.hsf.net" target="_blank" rel="noopener">HSF Site →</a>
+        </div>
+      </div>
+
+      <div class="action-card passed">
+        <div class="action-card-top">
+          <div class="action-school">Syracuse University</div>
+          <span class="action-badge badge-passed">Deadline Passed</span>
+        </div>
+        <p class="action-desc">Summer College Scholarship and Financial Aid deadline was March 1, 2026. Up to 25% of total cost of attendance via merit or need-based aid. Over 100 college-level courses available. Contact admissions to verify if late applications are still accepted.</p>
+        <div class="action-footer">
+          <span class="action-deadline muted">🕐 Deadline passed — follow up</span>
+          <a class="action-cta" href="https://www.syr.edu" target="_blank" rel="noopener">Contact →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SCHOOL DIRECTORY -->
+  <section id="schools">
+    <div class="section-label">Complete directory</div>
+    <h2 class="section-title">All 29 Schools</h2>
+    <p class="section-sub">Every college and university that has reached out to Matthew, sorted alphabetically. Click filters to narrow results.</p>
+
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-box" type="text" id="school-search" placeholder="Search schools…" oninput="filterSchools()">
+      </div>
+      <button class="filter-pill active" data-filter="all" onclick="setFilter(this)">All (29)</button>
+      <button class="filter-pill" data-filter="georgia" onclick="setFilter(this)">Georgia 🍑</button>
+      <button class="filter-pill" data-filter="scholarship" onclick="setFilter(this)">Scholarship 💰</button>
+      <button class="filter-pill" data-filter="visit" onclick="setFilter(this)">Visit Invite</button>
+      <button class="filter-pill" data-filter="jesuit" onclick="setFilter(this)">Jesuit</button>
+    </div>
+
+    <div class="school-grid" id="school-grid">
+
+      <div class="school-card" data-tags="scholarship sec major">
+        <div class="school-card-top"><span class="school-name">Auburn University</span><span class="school-state">AL</span></div>
+        <div class="school-type">SEC / Major Research University</div>
+        <div class="school-tags"><span class="tag tag-scholarship">Scholarship</span></div>
+        <div class="school-emails">✉ 1 email received</div>
+      </div>
+
+      <div class="school-card" data-tags="visit big12 private">
+        <div class="school-card-top"><span class="school-name">Baylor University</span><span class="school-state">TX</span></div>
+        <div class="school-type">Private / Big 12</div>
+        <div class="school-tags"><span class="tag tag-visit">Visit Event</span></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="private georgia">
+        <div class="school-card-top"><span class="school-name">Brenau University</span><span class="school-state">GA</span></div>
+        <div class="school-type">Private / Georgia</div>
+        <div class="school-tags"><span class="tag tag-instate">In-State</span></div>
+        <div class="school-emails">✉ 1 email received</div>
+      </div>
+
+      <div class="school-card" data-tags="summer deadline private liberal arts">
+        <div class="school-card-top"><span class="school-name">Bucknell University</span><span class="school-state">PA</span></div>
+        <div class="school-type">Private / Liberal Arts — High Interest</div>
+        <div class="school-tags"><span class="tag tag-summer">Summer Program</span><span class="tag tag-deadline">Deadline Mar 14</span></div>
+        <div class="school-emails">✉ 5 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="financial scholarship georgia instate">
+        <div class="school-card-top"><span class="school-name">Georgia Southern University</span><span class="school-state">GA</span></div>
+        <div class="school-type">Public / In-State — 91% receive aid</div>
+        <div class="school-tags"><span class="tag tag-instate">In-State</span><span class="tag tag-financial">Financial Aid</span><span class="tag tag-scholarship">Avg $7,439 Grant</span></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="georgia instate public">
+        <div class="school-card-top"><span class="school-name">Georgia State University</span><span class="school-state">GA</span></div>
+        <div class="school-type">Public / In-State</div>
+        <div class="school-tags"><span class="tag tag-instate">In-State</span></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="visit private northeast">
+        <div class="school-card-top"><span class="school-name">Hofstra University</span><span class="school-state">NY</span></div>
+        <div class="school-type">Private / New York</div>
+        <div class="school-tags"><span class="tag tag-visit">Visit Invite</span></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="jesuit summer deadline visit">
+        <div class="school-card-top"><span class="school-name">John Carroll University</span><span class="school-state">OH</span></div>
+        <div class="school-type">Private / Jesuit — High Interest</div>
+        <div class="school-tags"><span class="tag tag-deadline">Summer: Mar 16</span><span class="tag tag-visit">Preview: Apr 18</span></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="private visit">
+        <div class="school-card-top"><span class="school-name">Keiser University</span><span class="school-state">FL</span></div>
+        <div class="school-type">Private / Florida</div>
+        <div class="school-tags"><span class="tag tag-visit">Campus Preview Day</span></div>
+        <div class="school-emails">✉ 1 email received</div>
+      </div>
+
+      <div class="school-card" data-tags="georgia instate scholarship visit">
+        <div class="school-card-top"><span class="school-name">Kennesaw State University</span><span class="school-state">GA</span></div>
+        <div class="school-type">Public / In-State — Fintech Hackathon!</div>
+        <div class="school-tags"><span class="tag tag-instate">In-State</span><span class="tag tag-deadline">Hackathon: Mar 17</span></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="jesuit private northeast">
+        <div class="school-card-top"><span class="school-name">Loyola University Maryland</span><span class="school-state">MD</span></div>
+        <div class="school-type">Private / Jesuit</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="jesuit private south">
+        <div class="school-card-top"><span class="school-name">Loyola University New Orleans</span><span class="school-state">LA</span></div>
+        <div class="school-type">Private / Jesuit</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 1 email received</div>
+      </div>
+
+      <div class="school-card" data-tags="public midwest">
+        <div class="school-card-top"><span class="school-name">Miami University (Ohio)</span><span class="school-state">OH</span></div>
+        <div class="school-type">Public / Out-of-State</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="visit sec public">
+        <div class="school-card-top"><span class="school-name">Mississippi State University</span><span class="school-state">MS</span></div>
+        <div class="school-type">Public / SEC</div>
+        <div class="school-tags"><span class="tag tag-visit">Spring Preview Day</span></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="visit private northeast r1">
+        <div class="school-card-top"><span class="school-name">Northeastern University</span><span class="school-state">MA</span></div>
+        <div class="school-type">Private / R1 Research — Top Tier</div>
+        <div class="school-tags"><span class="tag tag-visit">Visit Invite — March</span></div>
+        <div class="school-emails">✉ 1 email received</div>
+      </div>
+
+      <div class="school-card" data-tags="scholarship visit private northeast">
+        <div class="school-card-top"><span class="school-name">Pace University</span><span class="school-state">NY</span></div>
+        <div class="school-type">Private / NYC &amp; Westchester</div>
+        <div class="school-tags"><span class="tag tag-scholarship">$1K Renewable Grant</span><span class="tag tag-visit">Visit Required</span></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="public southeast">
+        <div class="school-card-top"><span class="school-name">Radford University</span><span class="school-state">VA</span></div>
+        <div class="school-type">Public / Virginia</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="visit public bigtenn northeast">
+        <div class="school-card-top"><span class="school-name">Rutgers University-Camden</span><span class="school-state">NJ</span></div>
+        <div class="school-type">Public / Big Ten</div>
+        <div class="school-tags"><span class="tag tag-visit">Visit Invite</span></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="jesuit scholarship private midwest">
+        <div class="school-card-top"><span class="school-name">Saint Louis University</span><span class="school-state">MO</span></div>
+        <div class="school-type">Private / Jesuit</div>
+        <div class="school-tags"><span class="tag tag-scholarship">Billiken Promise</span></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="summer private liberal arts northeast">
+        <div class="school-card-top"><span class="school-name">Sarah Lawrence College</span><span class="school-state">NY</span></div>
+        <div class="school-type">Private / Liberal Arts</div>
+        <div class="school-tags"><span class="tag tag-summer">Summer Pre-College</span></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="scholarship financial deadline private acc northeast">
+        <div class="school-card-top"><span class="school-name">Syracuse University</span><span class="school-state">NY</span></div>
+        <div class="school-type">Private / ACC — Most Emails!</div>
+        <div class="school-tags"><span class="tag tag-financial">Up to 25% Aid</span><span class="tag tag-deadline-passed">Deadline Passed</span></div>
+        <div class="school-emails">✉ 7 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="public sec southeast">
+        <div class="school-card-top"><span class="school-name">Univ. of Alabama in Huntsville</span><span class="school-state">AL</span></div>
+        <div class="school-type">Public / SEC Research</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="public midwest">
+        <div class="school-card-top"><span class="school-name">University of Cincinnati</span><span class="school-state">OH</span></div>
+        <div class="school-type">Public / Ohio</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 1 email received</div>
+      </div>
+
+      <div class="school-card" data-tags="georgia instate sec public">
+        <div class="school-card-top"><span class="school-name">University of Georgia</span><span class="school-state">GA</span></div>
+        <div class="school-type">Public / In-State / SEC — Flagship</div>
+        <div class="school-tags"><span class="tag tag-instate">In-State</span></div>
+        <div class="school-emails">✉ 1 email received</div>
+      </div>
+
+      <div class="school-card" data-tags="public bigtenn midwest">
+        <div class="school-card-top"><span class="school-name">Univ. of Minnesota Twin Cities</span><span class="school-state">MN</span></div>
+        <div class="school-type">Public / Big Ten</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 3 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="georgia instate scholarship summer visit">
+        <div class="school-card-top"><span class="school-name">Valdosta State University</span><span class="school-state">GA</span></div>
+        <div class="school-type">Public / In-State — Most Engaged!</div>
+        <div class="school-tags"><span class="tag tag-instate">In-State</span><span class="tag tag-scholarship">$7.7M Scholarships</span><span class="tag tag-summer">Dual Enrollment</span></div>
+        <div class="school-emails">✉ 8 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="public southeast">
+        <div class="school-card-top"><span class="school-name">Western Carolina University</span><span class="school-state">NC</span></div>
+        <div class="school-type">Public / UNC System</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="scholarship private southeast">
+        <div class="school-card-top"><span class="school-name">Wingate University</span><span class="school-state">NC</span></div>
+        <div class="school-type">Private / North Carolina</div>
+        <div class="school-tags"><span class="tag tag-scholarship">99% Receive Scholarship</span></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+      <div class="school-card" data-tags="public visit southeast">
+        <div class="school-card-top"><span class="school-name">Winthrop University</span><span class="school-state">SC</span></div>
+        <div class="school-type">Public / South Carolina</div>
+        <div class="school-tags"></div>
+        <div class="school-emails">✉ 2 emails received</div>
+      </div>
+
+    </div>
+    <!-- Empty state -->
+    <div id="no-results" class="hidden" style="text-align:center;padding:48px 0;color:var(--muted);">
+      <div style="font-size:2.5rem;margin-bottom:12px;opacity:.4">🔍</div>
+      <p>No schools match your search.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- GEOGRAPHIC DISTRIBUTION -->
+  <section id="geo">
+    <div class="section-label">Where they are</div>
+    <h2 class="section-title">Geographic Distribution</h2>
+    <p class="section-sub">Schools span coast to coast — with a strong in-state Georgia presence and competitive Northeast cluster.</p>
+
+    <div class="geo-grid">
+
+      <div class="geo-card">
+        <div class="geo-card-header">
+          <div class="geo-dot" style="background:var(--teal)"></div>
+          <div>
+            <div class="geo-title">Georgia — In-State</div>
+            <div class="geo-count">6 schools</div>
+          </div>
+        </div>
+        <ul class="geo-schools">
+          <li>Georgia Southern University</li>
+          <li>Georgia State University</li>
+          <li>Kennesaw State University</li>
+          <li>University of Georgia</li>
+          <li>Valdosta State University</li>
+          <li>Brenau University</li>
+        </ul>
+      </div>
+
+      <div class="geo-card">
+        <div class="geo-card-header">
+          <div class="geo-dot" style="background:var(--gold)"></div>
+          <div>
+            <div class="geo-title">Northeast</div>
+            <div class="geo-count">8 schools</div>
+          </div>
+        </div>
+        <ul class="geo-schools">
+          <li>Syracuse University (NY)</li>
+          <li>Pace University (NY)</li>
+          <li>Hofstra University (NY)</li>
+          <li>Sarah Lawrence College (NY)</li>
+          <li>Northeastern University (MA)</li>
+          <li>Rutgers University-Camden (NJ)</li>
+          <li>Loyola University Maryland (MD)</li>
+          <li>Bucknell University (PA)</li>
+        </ul>
+      </div>
+
+      <div class="geo-card">
+        <div class="geo-card-header">
+          <div class="geo-dot" style="background:var(--red)"></div>
+          <div>
+            <div class="geo-title">Southeast (Other)</div>
+            <div class="geo-count">8 schools</div>
+          </div>
+        </div>
+        <ul class="geo-schools">
+          <li>Auburn University (AL)</li>
+          <li>Univ. of Alabama in Huntsville (AL)</li>
+          <li>Mississippi State University (MS)</li>
+          <li>Radford University (VA)</li>
+          <li>Winthrop University (SC)</li>
+          <li>Western Carolina University (NC)</li>
+          <li>Wingate University (NC)</li>
+          <li>Keiser University (FL)</li>
+        </ul>
+      </div>
+
+      <div class="geo-card">
+        <div class="geo-card-header">
+          <div class="geo-dot" style="background:var(--purple)"></div>
+          <div>
+            <div class="geo-title">Midwest &amp; South-Central</div>
+            <div class="geo-count">7 schools</div>
+          </div>
+        </div>
+        <ul class="geo-schools">
+          <li>John Carroll University (OH)</li>
+          <li>Miami University (OH)</li>
+          <li>University of Cincinnati (OH)</li>
+          <li>University of Minnesota (MN)</li>
+          <li>Saint Louis University (MO)</li>
+          <li>Baylor University (TX)</li>
+          <li>Loyola University New Orleans (LA)</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ORGANIZATIONS -->
+  <section id="orgs">
+    <div class="section-label">Additional outreach</div>
+    <h2 class="section-title">Organizations Contacting Matthew</h2>
+    <p class="section-sub">Beyond colleges, these key organizations are actively supporting Matthew's college planning journey.</p>
+
+    <div class="org-grid">
+      <div class="org-card">
+        <div class="org-icon" style="background:var(--blue-dim);border:1px solid var(--blue-border);">🎓</div>
+        <div>
+          <div class="org-name">College Board (SAT / BigFuture)</div>
+          <div class="org-desc">SAT prep resources, Bluebook practice tests, and BigFuture Ambassador program. SAT seats have been added in Matthew's area. BigFuture Ambassador application deadline has passed (Jan 25) — but SAT preparation should be ongoing via the Bluebook app.</div>
+        </div>
+      </div>
+      <div class="org-card">
+        <div class="org-icon" style="background:var(--green-dim);border:1px solid var(--green-border);">🏆</div>
+        <div>
+          <div class="org-name">Hispanic Scholarship Fund (HSF)</div>
+          <div class="org-desc">College 101 webinar series covering all phases of college planning — preparation, planning, and paying for college. 5+ reminder emails for the March 7 webinar (10 AM–1 PM ET). Confirm whether Matthew attended and request the recording if he did not.</div>
+        </div>
+      </div>
+      <div class="org-card">
+        <div class="org-icon" style="background:var(--gold-dim);border:1px solid var(--gold-border);">🏫</div>
+        <div>
+          <div class="org-name">Brookwood High School</div>
+          <div class="org-desc">Daily school digest via ParentSquare and Smore newsletters. Not directly college-focused, but school communications may contain important college-related announcements, scholarship postings, or college counseling event notices. Monitor regularly.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- NEXT STEPS -->
+  <section id="next-steps">
+    <div class="section-label">Action plan</div>
+    <h2 class="section-title">Recommended Next Steps</h2>
+    <p class="section-sub">A prioritized checklist from the full report — start at the top and work your way down.</p>
+
+    <div class="steps-grid">
+
+      <div class="step-item">
+        <div class="step-num urgent">1</div>
+        <div class="step-body">
+          <strong>Register Matthew for the KSU Fintech Hackathon by March 17</strong>
+          <p>Prizes up to $3,000 and it's a local, in-state event on March 28. Registration closes March 17 — this week. Hands-on fintech experience also looks great on college applications.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num urgent">2</div>
+        <div class="step-body">
+          <strong>Submit the Bucknell BASE application by March 14</strong>
+          <p>Bucknell has sent 5 emails showing strong interest in Matthew. The summer program is a creative problem-solving experience that could lead to a direct admissions advantage. Apply before Friday.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num urgent">3</div>
+        <div class="step-body">
+          <strong>Apply for John Carroll Summer in The Heights by March 16</strong>
+          <p>Two opportunities at John Carroll: summer program (apply by Mar 16) and Spring Preview Day (RSVP for Apr 18). Both help Matthew evaluate this Jesuit school in Ohio.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num action">4</div>
+        <div class="step-body">
+          <strong>Confirm HSF College 101 webinar attendance — get the recording if missed</strong>
+          <p>The March 7 webinar covers preparing, planning, and paying for college. If Matthew didn't attend, request the recording from HSF at hsf.net. This content is highly valuable for FAFSA and scholarship prep.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num action">5</div>
+        <div class="step-body">
+          <strong>Contact Syracuse about the Summer College scholarship deadline</strong>
+          <p>The March 1 deadline has passed but admissions offices sometimes accept late applications on a case-by-case basis. A single email or phone call could still unlock up to 25% of tuition coverage.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num action">6</div>
+        <div class="step-body">
+          <strong>Schedule an official Pace University campus visit to lock in the $1,000 renewable grant</strong>
+          <p>This is money left on the table. An official campus visit (NYC or Westchester) before applying triggers a renewable $1,000 grant upon enrollment. No major deadline listed — schedule now while spring slots are open.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num action">7</div>
+        <div class="step-body">
+          <strong>Book a Northeastern University Boston visit during March</strong>
+          <p>Northeastern is a top R1 research university with spring visit events open now. An early visit builds familiarity and demonstrates demonstrated interest — a factor some admissions teams track.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num action">8</div>
+        <div class="step-body">
+          <strong>RSVP for Valdosta State Open House (Mar 28) and John Carroll Preview Day (Apr 18)</strong>
+          <p>Both are free preview events and help Matthew compare school culture, campus environment, and fit. Valdosta State is also offering dual enrollment this summer to start earning college credits.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num long">9</div>
+        <div class="step-body">
+          <strong>Begin FAFSA preparation — Georgia Southern provided excellent guidance</strong>
+          <p>Senior year is coming fast. Georgia Southern's email included detailed FAFSA step-by-step guidance that applies universally. 91% of their students receive financial aid — make sure Matthew is in that pipeline.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num long">10</div>
+        <div class="step-body">
+          <strong>Review dual enrollment options at Valdosta State for summer 2026</strong>
+          <p>Dual enrollment lets Matthew earn college credits while still in high school — reducing cost and time to graduation. Valdosta State awarded $7.7 million in scholarships last year and actively supports dual-enrolled students.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num info">11</div>
+        <div class="step-body">
+          <strong>All summarized emails archived to a "College Emails" Gmail label</strong>
+          <p>All 29 schools' emails have been labeled and organized in Gmail for easy reference. Review the label regularly as new recruitment emails arrive throughout spring 2026.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- /wrap -->
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <p><strong>Matthew Dooley — College Outreach Dashboard</strong></p>
+    <p>29 schools &nbsp;·&nbsp; Prepared March 8, 2026 &nbsp;·&nbsp; Prepared by Larry Dooley via Claude AI</p>
+    <p style="margin-top:12px;font-size:.68rem;">For informational use only. Deadlines and scholarship details should be verified directly with each institution.</p>
+  </div>
+</footer>
+
+<script>
+// ── SCHOOL SEARCH + FILTER ──────────────────────────────────────
+let activeFilter = 'all';
+
+function setFilter(btn) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter;
+  filterSchools();
+}
+
+function filterSchools() {
+  const q = document.getElementById('school-search').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('#school-grid .school-card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const name = card.querySelector('.school-name').textContent.toLowerCase();
+    const state = card.querySelector('.school-state').textContent.toLowerCase();
+    const type = card.querySelector('.school-type').textContent.toLowerCase();
+    const tags = (card.dataset.tags || '').toLowerCase();
+
+    const matchSearch = !q || name.includes(q) || state.includes(q) || type.includes(q);
+    const matchFilter = activeFilter === 'all'
+      || (activeFilter === 'georgia'    && tags.includes('georgia'))
+      || (activeFilter === 'scholarship' && tags.includes('scholarship'))
+      || (activeFilter === 'visit'      && tags.includes('visit'))
+      || (activeFilter === 'jesuit'     && tags.includes('jesuit'));
+
+    const show = matchSearch && matchFilter;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  document.getElementById('no-results').classList.toggle('hidden', visible > 0);
+}
+
+// ── SCROLL ANIMATIONS ───────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.action-card, .school-card, .geo-card, .org-card, .step-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  observer.observe(el);
+});
+</script>
 </body>
 </html>
